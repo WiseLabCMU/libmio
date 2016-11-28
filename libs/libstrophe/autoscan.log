@@ -1,0 +1,265 @@
+autoscan: warning: missing AC_CHECK_FUNCS([gettimeofday]) wanted by: 
+	src/util.c:75
+autoscan: warning: missing AC_CHECK_FUNCS([memset]) wanted by: 
+	src/parser_libxml2.c:158
+	src/hash.c:64
+	src/sha1.c:265
+	src/sha1.c:266
+	src/sha1.c:267
+	src/sha1.c:268
+	src/tls_openssl.c:64
+	src/tls_schannel.c:80
+	src/tls_schannel.c:96
+	src/tls_schannel.c:128
+	src/tls_schannel.c:240
+	src/tls_schannel.c:243
+	src/tls_schannel.c:248
+	src/tls_schannel.c:253
+	src/tls_schannel.c:256
+	src/tls_schannel.c:480
+	src/tls_schannel.c:485
+	src/tls_schannel.c:490
+	src/tls_schannel.c:493
+	src/tls_schannel.c:496
+	src/tls_schannel.c:581
+	src/tls_schannel.c:586
+	src/tls_schannel.c:589
+	src/tls_schannel.c:592
+	src/tls_schannel.c:595
+	src/sock.c:90
+	src/sock.c:774
+	src/sock.c:781
+	src/sock.c:794
+	src/md5.c:60
+	src/md5.c:132
+	src/md5.c:136
+	src/md5.c:139
+	src/md5.c:151
+autoscan: warning: missing AC_CHECK_FUNCS([select]) wanted by: 
+	src/event.c:230
+	src/tls_openssl.c:121
+	src/tls_schannel.c:301
+	src/tls_schannel.c:314
+	tests/test_sock.c:32
+autoscan: warning: missing AC_CHECK_FUNCS([socket]) wanted by: 
+	src/sock.c:100
+	src/sock.c:791
+autoscan: warning: missing AC_CHECK_FUNCS([strcasecmp]) wanted by: 
+	src/auth.c:228
+	src/auth.c:230
+	src/auth.c:232
+autoscan: warning: missing AC_CHECK_FUNCS([strchr]) wanted by: 
+	src/jid.c:80
+	src/jid.c:105
+	src/jid.c:129
+	src/jid.c:137
+	src/jid.c:165
+	src/sock.c:668
+	src/sock.c:675
+	src/sock.c:721
+	src/sock.c:728
+	src/sock.c:745
+	src/sock.c:752
+autoscan: warning: missing AC_CHECK_FUNCS([strdup]) wanted by: 
+	src/tls_schannel.c:227
+autoscan: warning: missing AC_CHECK_HEADERS([fcntl.h]) wanted by: 
+	src/sock.c:36
+autoscan: warning: missing AC_CHECK_HEADERS([netdb.h]) wanted by: 
+	src/sock.c:35
+autoscan: warning: missing AC_CHECK_HEADERS([netinet/in.h]) wanted by: 
+	src/sock.c:34
+autoscan: warning: missing AC_CHECK_HEADERS([sys/socket.h]) wanted by: 
+	src/sock.c:33
+autoscan: warning: missing AC_CHECK_HEADERS([sys/time.h]) wanted by: 
+	src/util.c:25
+autoscan: warning: missing AC_CHECK_HEADER_STDBOOL wanted by: 
+	strophepp.h:113
+autoscan: warning: missing AC_C_INLINE wanted by: 
+	src/stanza.c:268
+autoscan: warning: missing AC_FUNC_MALLOC wanted by: 
+	src/ctx.c:114
+	src/oocontext.cpp:40
+	tests/test_ctx.c:30
+	examples/bot.c:94
+autoscan: warning: missing AC_FUNC_REALLOC wanted by: 
+	strophepp.h:36
+	src/ctx.c:124
+	src/ctx.c:228
+	src/oocontext.cpp:43
+	src/oocontext.cpp:45
+	src/oocontext.cpp:73
+	tests/test_ctx.c:42
+autoscan: warning: missing AC_HEADER_RESOLV wanted by: 
+	src/sock.c:41
+autoscan: warning: missing AC_PROG_CXX wanted by: 
+	src/oostanza.cpp
+	src/oocontext.cpp
+autoscan: warning: missing AC_TYPE_INT16_T wanted by: 
+	src/sha1.c:91
+	src/sasl.c:29
+autoscan: warning: missing AC_TYPE_INT32_T wanted by: 
+	src/sha1.c:92
+	src/sasl.c:30
+autoscan: warning: missing AC_TYPE_INT64_T wanted by: 
+	src/sha1.c:93
+	src/sasl.c:31
+autoscan: warning: missing AC_TYPE_INT8_T wanted by: 
+	src/sha1.c:90
+	src/sasl.c:28
+autoscan: warning: missing AC_TYPE_SIZE_T wanted by: 
+	strophepp.h:35
+	strophepp.h:36
+	strophepp.h:45
+	strophepp.h:46
+	strophepp.h:60
+	strophepp.h:71
+	strophepp.h:84
+	strophepp.h:100
+	strophe.h:125
+	strophe.h:127
+	strophe.h:239
+	strophe.h:305
+	strophe.h:335
+	src/oostanza.cpp:20
+	src/snprintf.c:107
+	src/snprintf.c:108
+	src/snprintf.c:110
+	src/snprintf.c:112
+	src/snprintf.c:112
+	src/snprintf.c:114
+	src/snprintf.c:114
+	src/snprintf.c:116
+	src/snprintf.c:116
+	src/snprintf.c:118
+	src/snprintf.c:118
+	src/snprintf.c:152
+	src/snprintf.c:164
+	src/snprintf.c:410
+	src/snprintf.c:410
+	src/snprintf.c:451
+	src/snprintf.c:451
+	src/snprintf.c:579
+	src/snprintf.c:579
+	src/snprintf.c:721
+	src/snprintf.c:721
+	src/snprintf.c:729
+	src/snprintf.c:742
+	src/snprintf.c:749
+	src/snprintf.c:757
+	src/sha1.c:215
+	src/sha1.c:217
+	src/conn.c:546
+	src/conn.c:591
+	src/conn.c:637
+	src/conn.c:684
+	src/conn.c:765
+	src/tls_openssl.c:161
+	src/tls_openssl.c:172
+	src/common.h:59
+	src/common.h:61
+	src/common.h:111
+	src/common.h:112
+	src/common.h:273
+	src/common.h:274
+	src/tls_schannel.c:417
+	src/tls_schannel.c:565
+	src/tls.h:41
+	src/tls.h:42
+	src/sha1.h:24
+	src/ctx.c:112
+	src/ctx.c:122
+	src/ctx.c:200
+	src/ctx.c:226
+	src/sock.c:147
+	src/sock.c:152
+	src/tls_dummy.c:76
+	src/tls_dummy.c:81
+	src/sock.h:41
+	src/sock.h:42
+	src/stanza.c:217
+	src/stanza.c:270
+	src/stanza.c:289
+	src/stanza.c:292
+	src/stanza.c:386
+	src/stanza.c:389
+	src/stanza.c:650
+	src/stanza.c:822
+	src/util.c:46
+	src/oocontext.cpp:38
+	src/oocontext.cpp:43
+	src/oocontext.cpp:65
+	src/oocontext.cpp:70
+	src/tls_gnutls.c:115
+	src/tls_gnutls.c:124
+	tests/test_ctx.c:27
+	tests/test_ctx.c:39
+autoscan: warning: missing AC_TYPE_UINT16_T wanted by: 
+	src/sha1.c:96
+	src/sasl.c:34
+autoscan: warning: missing AC_TYPE_UINT32_T wanted by: 
+	src/md5.h:19
+	src/md5.h:25
+	src/md5.h:26
+	src/md5.h:32
+	src/md5.h:34
+	src/sha1.c:97
+	src/sha1.c:105
+	src/sha1.c:143
+	src/sha1.c:145
+	src/sha1.c:148
+	src/sha1.c:246
+	src/sha1.h:16
+	src/sha1.h:17
+	src/md5.c:33
+	src/md5.c:34
+	src/md5.c:35
+	src/md5.c:36
+	src/md5.c:67
+	src/md5.c:69
+	src/md5.c:74
+	src/md5.c:182
+	src/md5.c:185
+	src/md5.c:186
+	src/sasl.c:35
+	src/sasl.c:412
+	src/sasl.c:490
+autoscan: warning: missing AC_TYPE_UINT64_T wanted by: 
+	src/event.c:86
+	src/handler.c:139
+	src/handler.c:144
+	src/handler.c:146
+	src/common.h:132
+	src/common.h:159
+	src/common.h:249
+	src/ostypes.h:24
+	src/util.h:29
+	src/util.h:30
+	src/util.h:30
+	src/util.h:30
+	src/util.c:68
+	src/util.c:77
+	src/util.c:77
+	src/util.c:91
+	src/util.c:91
+	src/util.c:91
+	src/util.c:93
+autoscan: warning: missing AC_TYPE_UINT8_T wanted by: 
+	src/sha1.c:95
+	src/sha1.c:105
+	src/sha1.c:143
+	src/sha1.c:147
+	src/sha1.c:153
+	src/sha1.c:215
+	src/sha1.c:244
+	src/sha1.c:247
+	src/sha1.c:253
+	src/sha1.c:255
+	src/sha1.c:259
+	src/sha1.c:332
+	src/sha1.c:352
+	src/sha1.c:359
+	src/sha1.c:374
+	src/sha1.h:18
+	src/sha1.h:24
+	src/sha1.h:25
+	src/sasl.c:33
