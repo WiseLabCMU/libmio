@@ -604,8 +604,8 @@ int mio_item_recent_get(mio_conn_t* conn, const char *node,
 }
 
 int mio_items_recent_get(mio_conn_t* conn, const char *node,
-                        mio_response_t * response, int max_items, char **item_id, int n_items,
-                        mio_handler *handler) {
+                         mio_response_t * response, int max_items, char **item_id, int n_items,
+                         mio_handler *handler) {
 
     mio_stanza_t *iq = NULL;
     xmpp_stanza_t *items = NULL;
@@ -635,7 +635,7 @@ int mio_items_recent_get(mio_conn_t* conn, const char *node,
             xmpp_stanza_set_name(item, "item");
             xmpp_stanza_set_id(item, item_id[i]);
             xmpp_stanza_add_child(items, item);
-        } 
+        }
     }
     if (n_items == 0) {
         if (max_items != 0) {
@@ -648,9 +648,9 @@ int mio_items_recent_get(mio_conn_t* conn, const char *node,
         snprintf(max_items_s, 16, "%u", max_items);
         xmpp_stanza_set_attribute(items, "max_items", max_items_s);
     }
-        
+
 // Build xmpp message
-   xmpp_stanza_add_child(iq->xmpp_stanza->children, items);
+    xmpp_stanza_add_child(iq->xmpp_stanza->children, items);
 // If a handler is specified use it, otherwise use default handler
     if (handler == NULL )
 // Send out the stanza

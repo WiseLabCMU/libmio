@@ -319,8 +319,8 @@ void mio_enum_map_meta_add(mio_transducer_meta_t *t_meta,
         curr->next = e_meta;
 }
 
-mio_meta_t* copy_meta(mio_meta_t* meta) { 
-	return NULL;
+mio_meta_t* copy_meta(mio_meta_t* meta) {
+    return NULL;
 }
 
 void mio_transducers_merge(mio_meta_t *meta_to_update, mio_meta_t *meta) {
@@ -338,11 +338,11 @@ void mio_properties_merge(mio_meta_t *meta_to_update, mio_meta_t *meta) {
  * @param event A pointer to the mio meta struct containing the up to date data.
  */
 void mio_meta_merge(mio_meta_t *meta_to_update, mio_meta_t *meta) {
-    if (meta_to_update == NULL) { 
-	return;	
+    if (meta_to_update == NULL) {
+        return;
     }
-    if (meta == NULL) { 
-	return;	
+    if (meta == NULL) {
+        return;
     }
 
     meta_to_update->meta_type = meta->meta_type;
@@ -366,7 +366,7 @@ void mio_meta_merge(mio_meta_t *meta_to_update, mio_meta_t *meta) {
             meta_to_update->properties = mio_property_meta_new();
         mio_meta_property_merge(meta_to_update->properties, meta->properties);
     }
-    if (meta_to_update->timestamp != NULL ) { 
+    if (meta_to_update->timestamp != NULL ) {
         free(meta_to_update->timestamp);
     }
     meta_to_update->timestamp = strdup(meta->timestamp);
@@ -550,13 +550,13 @@ int mio_meta_merge_publish(mio_conn_t *conn, char *node, mio_meta_t *meta,
         return MIO_ERROR_UNEXPECTED_RESPONSE;
     query_meta = (mio_meta_t*) packet->payload;
 
-    
-    if (query_meta == NULL) { 
-	    query_meta = mio_meta_new();
+
+    if (query_meta == NULL) {
+        query_meta = mio_meta_new();
     }
-    if (strcmp(query_meta->name,meta->name) != 0 || 
-		    query_meta->meta_type != meta->meta_type) { 
-	update_references = 1;
+    if (strcmp(query_meta->name,meta->name) != 0 ||
+            query_meta->meta_type != meta->meta_type) {
+        update_references = 1;
     }
     mio_meta_merge(query_meta, meta);
 
@@ -564,27 +564,27 @@ int mio_meta_merge_publish(mio_conn_t *conn, char *node, mio_meta_t *meta,
     item = mio_meta_to_item(conn, query_meta);
     err = mio_item_publish(conn, item, node, response);
     mio_response_free(query_response);
-    if (err != MIO_OK) { 
-	   return err;
+    if (err != MIO_OK) {
+        return err;
     }
     mio_response_free(response);
-    if (update_references) { 
-    	        response = mio_response_new();
-    	err = mio_references_query(conn,node,response);
-    	if (err != MIO_OK) {
-    	       return err;
-    	} 
-    	if (response->response == NULL) { 
-    	        return err;
-    	}
-    	packet = (mio_packet_t*) response->response;
-    	references = packet->payload;
-	reference = references;
-    	while (reference != NULL) { 
-    	       //mio_references_update(reference->id);
-    	       reference = reference->next; 
-    	}
-    	mio_response_free(response);
+    if (update_references) {
+        response = mio_response_new();
+        err = mio_references_query(conn,node,response);
+        if (err != MIO_OK) {
+            return err;
+        }
+        if (response->response == NULL) {
+            return err;
+        }
+        packet = (mio_packet_t*) response->response;
+        references = packet->payload;
+        reference = references;
+        while (reference != NULL) {
+            //mio_references_update(reference->id);
+            reference = reference->next;
+        }
+        mio_response_free(response);
     }
     return err;
 }

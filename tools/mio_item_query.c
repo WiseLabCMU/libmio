@@ -82,7 +82,7 @@ int main(int argc, char **argv) {
     char *item_id = NULL;
     char **buf;
     int buflen;
-    
+
     int max_items = 10;
     int err;
     int stanza = 0;
@@ -111,7 +111,7 @@ int main(int argc, char **argv) {
         }
 
         if (strcmp(current_arg_name, "-max_items") == 0) {
-            max_items = atoi(argv[current_arg_num++]); 
+            max_items = atoi(argv[current_arg_num++]);
             return -1;
         }
 
@@ -143,7 +143,7 @@ int main(int argc, char **argv) {
         } else if (strcmp(current_arg_name, "-id") == 0) {
             item_id = current_arg_val;
         } else if (strcmp(current_arg_name, "-stanza") == 0) {
-		stanza = 1;
+            stanza = 1;
         } else if (strcmp(current_arg_name, "-max") == 0) {
             max_items = atoi(current_arg_val);
         } else {
@@ -190,68 +190,68 @@ int main(int argc, char **argv) {
 
     response = mio_response_new();
 
-    if (!stanza) { 
-    	if (item_id != NULL ) {
-    	    if (strcmp(item_id, "meta") == 0)
-    	        err = mio_item_recent_get(conn, event_node, response, max_items,
-    	                                  item_id, (mio_handler *) mio_handler_meta_query);
-    	    else if (strcmp(item_id, "references") == 0)
-    	        err = mio_item_recent_get(conn, event_node, response, max_items,
-    	                                  item_id, (mio_handler*) mio_handler_references_query);
-    	    else if (strcmp(item_id, "schedule") == 0)
-    	        err = mio_item_recent_get(conn, event_node, response, max_items,
-    	                                  item_id, (mio_handler*) mio_handler_schedule_query);
-    	    else 
-    	        err = mio_item_recent_get(conn, event_node, response, max_items,
-    	                                  item_id, NULL);
-    	} else
-    	    err = mio_item_recent_get(conn, event_node, response, max_items, NULL,
-    	                              NULL );
-    	if (err == MIO_OK) { 
-    	    mio_response_print(response);
-    	}
-    } else { 
+    if (!stanza) {
+        if (item_id != NULL ) {
+            if (strcmp(item_id, "meta") == 0)
+                err = mio_item_recent_get(conn, event_node, response, max_items,
+                                          item_id, (mio_handler *) mio_handler_meta_query);
+            else if (strcmp(item_id, "references") == 0)
+                err = mio_item_recent_get(conn, event_node, response, max_items,
+                                          item_id, (mio_handler*) mio_handler_references_query);
+            else if (strcmp(item_id, "schedule") == 0)
+                err = mio_item_recent_get(conn, event_node, response, max_items,
+                                          item_id, (mio_handler*) mio_handler_schedule_query);
+            else
+                err = mio_item_recent_get(conn, event_node, response, max_items,
+                                          item_id, NULL);
+        } else
+            err = mio_item_recent_get(conn, event_node, response, max_items, NULL,
+                                      NULL );
+        if (err == MIO_OK) {
+            mio_response_print(response);
+        }
+    } else {
 
-    	cur_item = strtok(item_id, ",");
-    	//item_holder = malloc(n_items*sizeof(char*));
-    	item_count = 0;
-    	while (cur_item) {
-    	    item_holder[item_count] = cur_item;
-    	    cur_item = strtok(NULL,",");
-    	    item_count++; 
-	    if (item_count > n_items) { 
-		    n_items *= 2;
-		    realloc(item_holder, n_items);
-		    if (item_holder == NULL) { 
-			    break;
-		    }
-	    }
-    	}
-    	response = mio_response_new();
-    	err = mio_items_recent_get(conn, event_node, response, max_items, item_holder, item_count ,
-    	                          (mio_handler*) mio_handler_error);
-    	if (err != MIO_OK) {
-    	   mio_response_free(response);
-	}
-    	
+        cur_item = strtok(item_id, ",");
+        //item_holder = malloc(n_items*sizeof(char*));
+        item_count = 0;
+        while (cur_item) {
+            item_holder[item_count] = cur_item;
+            cur_item = strtok(NULL,",");
+            item_count++;
+            if (item_count > n_items) {
+                n_items *= 2;
+                realloc(item_holder, n_items);
+                if (item_holder == NULL) {
+                    break;
+                }
+            }
+        }
+        response = mio_response_new();
+        err = mio_items_recent_get(conn, event_node, response, max_items, item_holder, item_count ,
+                                   (mio_handler*) mio_handler_error);
+        if (err != MIO_OK) {
+            mio_response_free(response);
+        }
 
-    	if ((response->stanza == NULL) || 
-    	   (response->stanza->xmpp_stanza == NULL) ||
-    	       (response->stanza->xmpp_stanza->children== NULL)){
-	} else if (err == MIO_OK) {
-    	    if (item_count == 1) {
-    	        item = xmpp_stanza_get_child_by_name(
-    	               response->stanza->xmpp_stanza->children->children, "item");
-	    } else {
-    	        item = xmpp_stanza_get_child_by_name(
-    	               response->stanza->xmpp_stanza->children, "items");
-	    }
-    	    if (item != NULL ) {
-    	        xmpp_stanza_to_text(item, (char**) &buf, (size_t*) &buflen);
-    	        fprintf(stdout, "%s", (char*) buf);
-    	        free(buf);
-    	    } 
-    	} 
+
+        if ((response->stanza == NULL) ||
+                (response->stanza->xmpp_stanza == NULL) ||
+                (response->stanza->xmpp_stanza->children== NULL)) {
+        } else if (err == MIO_OK) {
+            if (item_count == 1) {
+                item = xmpp_stanza_get_child_by_name(
+                           response->stanza->xmpp_stanza->children->children, "item");
+            } else {
+                item = xmpp_stanza_get_child_by_name(
+                           response->stanza->xmpp_stanza->children, "items");
+            }
+            if (item != NULL ) {
+                xmpp_stanza_to_text(item, (char**) &buf, (size_t*) &buflen);
+                fprintf(stdout, "%s", (char*) buf);
+                free(buf);
+            }
+        }
 
     }
     mio_response_free(response);

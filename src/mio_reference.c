@@ -253,9 +253,9 @@ int mio_reference_child_remove(mio_conn_t *conn, char* parent, char *child,
                 if (child_refs == NULL )
                     packet->payload = NULL;
                 child_item = mio_references_to_item(conn, child_refs);
-		if (child_item == NULL) { 
-			child_item = mio_pubsub_item_new(conn,"references");
-		}
+                if (child_item == NULL) {
+                    child_item = mio_pubsub_item_new(conn,"references");
+                }
                 pub_child = mio_response_new();
                 mio_item_publish(conn, child_item, child, pub_child);
                 if (pub_child->response_type == MIO_RESPONSE_ERROR) {
@@ -522,6 +522,6 @@ int mio_handler_references_query(mio_conn_t * const conn,
 }
 
 int mio_reference_update(mio_conn_t *conn, char* event_node_id) {
-	return -1;
+    return -1;
 }
 

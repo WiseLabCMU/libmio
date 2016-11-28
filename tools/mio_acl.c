@@ -35,43 +35,43 @@ mio_conn_t *conn;
 
 void print_usage(char *prog_name) {
     fprintf(stdout,
-            "\"%s\" Command line utility to interact with affilations.\n",
+            "\"%s\" Command line utility to interact with event node affilations.\n",
             prog_name);
     fprintf(stdout,
-            "Usage: %s <-j jid> <-p password (optional)> <-c command> <-u user's jid> \
-	    <-event event_node> [-verbose] [-stanza]  \n",
+            "Usage: %s <-j jid> <-p password (optional)> <-c command> <-u user's jid> <-event event_node> [-verbose] [-stanza]  \n",
             prog_name);
-    fprintf(stdout, "Usage: %s -help\n", prog_name);
     fprintf(stdout, "\t-event event_node = name of node to query\n");
     fprintf(stdout,
             "\t-j jid = JID (give the full JabberID, i.e. user@domain)\n");
     fprintf(stdout, "\t-p password = JID user password\n");
     fprintf(stdout, "\t-help = print this usage and exit\n");
     fprintf(stdout, "\t-verbose = print info\n");
-    fprintf(stdout, "\t-stanza = only print the affiliations stanza\n");
+    fprintf(stdout, "\t-stanza = only print the affiliations stanza\n\n");
     fprintf(stdout, "Commands:\n");
     fprintf(stdout, "\t-r = remove\n");
     fprintf(stdout, "\t-a = add\n");
-    fprintf(stdout, "\t-q = query\n");
+    fprintf(stdout, "\t-q = query\n\n");
 
-    fprintf(stdout,"Options:");
+    fprintf(stdout, "Options:\n");
     fprintf(stdout, "\t-affil [affiliaiton] = affiliation, publisher, outcast, none, onlypublish, owner, member\n");
     fprintf(stdout, "\t-group [group jid] = group to add to or remove from\n");
     fprintf(stdout, "\t-event [event id] = event node id\n");
+    fprintf(stdout, "\t-u [user jid] = user to add or remove from acl\n");
 }
-typedef struct { 
-	char* event;
-	char* password;
-	char* jid;
-	char* acl_jid;
-	char* group;
-	char* pubsub_server;
-	char* xmpp_server;
-	char command;
-	int verbose;
-	int affil;
-	int stanza;
-	int help;
+
+typedef struct {
+    char* event;
+    char* password;
+    char* jid;
+    char* acl_jid;
+    char* group;
+    char* pubsub_server;
+    char* xmpp_server;
+    char command;
+    int verbose;
+    int affil;
+    int stanza;
+    int help;
 } arg_t;
 
 arg_t * parse_arguments(int argc, char** argv) {
@@ -83,55 +83,55 @@ arg_t * parse_arguments(int argc, char** argv) {
     memset(args,0x0,sizeof(arg_t));
     while (current_arg_num < argc) {
         current_arg_name = argv[current_arg_num];
-	if (current_arg_num+1 < argc) 
-        	current_arg_val = argv[current_arg_num+1];
-	current_arg_num++;
+        if (current_arg_num+1 < argc)
+            current_arg_val = argv[current_arg_num+1];
+        current_arg_num++;
 
-	if (strcmp(current_arg_name, "-r") == 0) { 
-		args->command = 'a';
-		args->affil = MIO_AFFILIATION_NONE;
-		continue;
-	}
-	if (strcmp(current_arg_name, "-a") == 0) { 
-		args->command = 'a';
-		continue;
-	}
-	if (strcmp(current_arg_name, "-q") == 0) { 
-		args->command = 'q';
-		continue;
-	}
-	if (strcmp(current_arg_name, "-affil") == 0) { 
-		current_arg_num++;
-		affil_set = 1;
-		if (strcmp(current_arg_val,"publisher") == 0) { 
-			args->affil = MIO_AFFILIATION_PUBLISHER;
-		} else if (strcmp(current_arg_val,"none") == 0) { 
-			args->affil = MIO_AFFILIATION_NONE;
-		} else if (strcmp(current_arg_val,"owner") == 0) { 
-			args->affil = MIO_AFFILIATION_OWNER;
-		} else if (strcmp(current_arg_val,"outcast") == 0) { 
-			args->affil = MIO_AFFILIATION_OUTCAST;
-		} else if (strcmp(current_arg_val,"onlypublish") == 0) { 
-			args->affil = MIO_AFFILIATION_PUBLISH_ONLY;
-		} else if (strcmp(current_arg_val,"member") == 0) { 
-			args->affil = MIO_AFFILIATION_MEMBER;
-		} else {
-			free(args);
-			fprintf(stderr,
-				"Unknown afill type. Optionsin are publisher, outcast, none, onlypubhlish, and member\n");
-			return NULL;
-		}
-		affil_set = 1;
-		continue;
-	}
-	if (strcmp(current_arg_name, "-group") == 0) {
-		args->group = current_arg_val;
-		current_arg_num++;
-		continue;
-	}
+        if (strcmp(current_arg_name, "-r") == 0) {
+            args->command = 'a';
+            args->affil = MIO_AFFILIATION_NONE;
+            continue;
+        }
+        if (strcmp(current_arg_name, "-a") == 0) {
+            args->command = 'a';
+            continue;
+        }
+        if (strcmp(current_arg_name, "-q") == 0) {
+            args->command = 'q';
+            continue;
+        }
+        if (strcmp(current_arg_name, "-affil") == 0) {
+            current_arg_num++;
+            affil_set = 1;
+            if (strcmp(current_arg_val,"publisher") == 0) {
+                args->affil = MIO_AFFILIATION_PUBLISHER;
+            } else if (strcmp(current_arg_val,"none") == 0) {
+                args->affil = MIO_AFFILIATION_NONE;
+            } else if (strcmp(current_arg_val,"owner") == 0) {
+                args->affil = MIO_AFFILIATION_OWNER;
+            } else if (strcmp(current_arg_val,"outcast") == 0) {
+                args->affil = MIO_AFFILIATION_OUTCAST;
+            } else if (strcmp(current_arg_val,"onlypublish") == 0) {
+                args->affil = MIO_AFFILIATION_PUBLISH_ONLY;
+            } else if (strcmp(current_arg_val,"member") == 0) {
+                args->affil = MIO_AFFILIATION_MEMBER;
+            } else {
+                free(args);
+                fprintf(stderr,
+                        "Unknown afill type. Optionsin are publisher, outcast, none, onlypubhlish, and member\n");
+                return NULL;
+            }
+            affil_set = 1;
+            continue;
+        }
+        if (strcmp(current_arg_name, "-group") == 0) {
+            args->group = current_arg_val;
+            current_arg_num++;
+            continue;
+        }
         if (strcmp(current_arg_name, "-help") == 0) {
             print_usage(argv[0]);
-            return NULL; 
+            return NULL;
         }
         if (strcmp(current_arg_name, "-verbose") == 0) {
             args->verbose = 1;
@@ -140,11 +140,11 @@ arg_t * parse_arguments(int argc, char** argv) {
         if (strcmp(current_arg_name, "-stanza") == 0) {
             args->stanza = 1;
             continue;
-	} 
+        }
 
         if (strcmp(current_arg_name, "-event") == 0) {
             args->event = current_arg_val;
-	    current_arg_num++;
+            current_arg_num++;
         } else if (strcmp(current_arg_name, "-u") == 0) {
             args->jid = current_arg_val;
             args->xmpp_server = mio_get_server(args->jid);
@@ -152,10 +152,13 @@ arg_t * parse_arguments(int argc, char** argv) {
                 fprintf(stderr, "Invalid JID, use format user@domain\n");
                 return NULL;
             }
-	    current_arg_num++;
+            current_arg_num++;
         } else if (strcmp(current_arg_name, "-p") == 0) {
             args->password = current_arg_val;
-	    current_arg_num++;
+            current_arg_num++;
+        } else if (strcmp(current_arg_name, "-u") == 0) {
+            args->acl_jid = current_arg_val;
+            current_arg_num++;
         } else {
             fprintf(stderr, "Unknown argument: %s\n", current_arg_name);
             print_usage(argv[0]);
@@ -176,19 +179,19 @@ arg_t * parse_arguments(int argc, char** argv) {
             print_usage(argv[0]);
             return NULL;
         }
-    } else if (args->command == '\0') { 
-	    fprintf(stderr, "Command is missing\n");
-            print_usage(argv[0]);
-	    return NULL;
-    } else if (args->command == 'r' && (args->acl_jid == NULL || args->event == NULL)) { 
-	    fprintf(stderr, "User to remove is missing\n");
-            print_usage(argv[0]);
-	    return NULL;
-    } else if (args->command == 'a' && ((args->acl_jid == NULL && args->group == NULL) || 
-		    affil_set == 0 || args->event == NULL)) { 
-	    fprintf(stderr, "Adding user requires username, affiliation, and event node.\n");
-            print_usage(argv[0]);
-	    return NULL;
+    } else if (args->command == '\0') {
+        fprintf(stderr, "Command is missing\n");
+        print_usage(argv[0]);
+        return NULL;
+    } else if (args->command == 'r' && (args->acl_jid == NULL || args->event == NULL)) {
+        fprintf(stderr, "User to remove is missing\n");
+        print_usage(argv[0]);
+        return NULL;
+    } else if (args->command == 'a' && ((args->acl_jid == NULL && args->group == NULL) ||
+                                        affil_set == 0 || args->event == NULL)) {
+        fprintf(stderr, "Adding user requires username, affiliation, and event node.\n");
+        print_usage(argv[0]);
+        return NULL;
     }
     return args;
 }
@@ -237,8 +240,8 @@ int main(int argc, char **argv) {
     }
 
     response = mio_response_new();
-    if (args->command == 'q') { 
-    	err = mio_acl_affiliations_query(conn, args->event, response);
+    if (args->command == 'q') {
+        err = mio_acl_affiliations_query(conn, args->event, response);
         if (args->stanza != 0 && response->response_type != MIO_RESPONSE_PACKET) {
             stanza = xmpp_stanza_get_child_by_name(
                          response->stanza->xmpp_stanza->children, "affiliations");
@@ -249,11 +252,11 @@ int main(int argc, char **argv) {
                 free(buf);
             } else {
                 fprintf(stderr, "Error reading affiliations\n");
-	    }
+            }
         }
-    } else { 
-    	err = mio_acl_affiliation_set(conn, args->event, args->acl_jid,
-                                  args->affil, response);
+    } else {
+        err = mio_acl_affiliation_set(conn, args->event, args->acl_jid,
+                                      args->affil, response);
     }
     mio_response_print(response);
     mio_response_free(response);

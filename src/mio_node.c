@@ -334,48 +334,48 @@ int mio_node_create(mio_conn_t * conn, const char *node, const char* title,
     xmpp_stanza_set_ns(x, "jabber:x:data");
     xmpp_stanza_set_type(x, "submit");
 
-// Create form field of config 
-        form_field = xmpp_stanza_new(conn->xmpp_conn->ctx);
-        form_field_value = xmpp_stanza_new(conn->xmpp_conn->ctx);
-        form_field_value_text = xmpp_stanza_new(conn->xmpp_conn->ctx);
-        xmpp_stanza_set_name(form_field_value, "value");
-        xmpp_stanza_set_text(form_field_value_text,
-                             "http://jabber.org/protocol/pubsub#node_config");
-        xmpp_stanza_set_name(form_field, "field");
-        xmpp_stanza_set_attribute(form_field, "var", "FORM_TYPE");
-        xmpp_stanza_set_type(form_field, "hidden");
-        xmpp_stanza_add_child(form_field_value, form_field_value_text);
-        xmpp_stanza_add_child(form_field, form_field_value);
- 
+// Create form field of config
+    form_field = xmpp_stanza_new(conn->xmpp_conn->ctx);
+    form_field_value = xmpp_stanza_new(conn->xmpp_conn->ctx);
+    form_field_value_text = xmpp_stanza_new(conn->xmpp_conn->ctx);
+    xmpp_stanza_set_name(form_field_value, "value");
+    xmpp_stanza_set_text(form_field_value_text,
+                         "http://jabber.org/protocol/pubsub#node_config");
+    xmpp_stanza_set_name(form_field, "field");
+    xmpp_stanza_set_attribute(form_field, "var", "FORM_TYPE");
+    xmpp_stanza_set_type(form_field, "hidden");
+    xmpp_stanza_add_child(form_field_value, form_field_value_text);
+    xmpp_stanza_add_child(form_field, form_field_value);
 
-        maxitems_field = xmpp_stanza_new(conn->xmpp_conn->ctx);
-        maxitems_value = xmpp_stanza_new(conn->xmpp_conn->ctx);
-        maxitems_val = xmpp_stanza_new(conn->xmpp_conn->ctx);
-        xmpp_stanza_set_name(maxitems_field, "field");
-        xmpp_stanza_set_attribute(maxitems_field, "var", "pubsub#max_items");
-        xmpp_stanza_set_name(maxitems_value, "value");
-        err = xmpp_stanza_set_text(maxitems_val, "500");
+
+    maxitems_field = xmpp_stanza_new(conn->xmpp_conn->ctx);
+    maxitems_value = xmpp_stanza_new(conn->xmpp_conn->ctx);
+    maxitems_val = xmpp_stanza_new(conn->xmpp_conn->ctx);
+    xmpp_stanza_set_name(maxitems_field, "field");
+    xmpp_stanza_set_attribute(maxitems_field, "var", "pubsub#max_items");
+    xmpp_stanza_set_name(maxitems_value, "value");
+    err = xmpp_stanza_set_text(maxitems_val, "500");
 
 // Build max+items field
-        xmpp_stanza_add_child(maxitems_value, maxitems_val);
-        xmpp_stanza_add_child(maxitems_field, maxitems_value);
+    xmpp_stanza_add_child(maxitems_value, maxitems_val);
+    xmpp_stanza_add_child(maxitems_field, maxitems_value);
 
 // Release unneeded stanzas
-        xmpp_stanza_release(maxitems_val);
-        xmpp_stanza_release(maxitems_value);
- 
+    xmpp_stanza_release(maxitems_val);
+    xmpp_stanza_release(maxitems_value);
+
     if (title != NULL ) {
 // Create title field and value stanza
         title_field = xmpp_stanza_new(conn->xmpp_conn->ctx);
         title_value = xmpp_stanza_new(conn->xmpp_conn->ctx);
         title_val = xmpp_stanza_new(conn->xmpp_conn->ctx);
-       xmpp_stanza_set_name(title_field, "field");
+        xmpp_stanza_set_name(title_field, "field");
         xmpp_stanza_set_attribute(title_field, "var", "pubsub#title");
         xmpp_stanza_set_name(title_value, "value");
         err = xmpp_stanza_set_text(title_val, title);
 
 // Build title field
-       xmpp_stanza_add_child(title_value, title_val);
+        xmpp_stanza_add_child(title_value, title_val);
         xmpp_stanza_add_child(title_field, title_value);
 
 // Release unneeded stanzas

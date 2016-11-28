@@ -38,8 +38,8 @@ int mio_item_recent_get(mio_conn_t* conn, const char *node,
                         mio_response_t * response, int max_items, const char *item_id,
                         mio_handler *handler);
 int mio_items_recent_get(mio_conn_t* conn, const char *node,
-                        mio_response_t * response, int max_items, char **item_ids,int item_count,
-                        mio_handler *handler);
+                         mio_response_t * response, int max_items, char **item_ids,int item_count,
+                         mio_handler *handler);
 
 
 mio_stanza_t *mio_pubsub_item_new(mio_conn_t *conn, char* item_type);

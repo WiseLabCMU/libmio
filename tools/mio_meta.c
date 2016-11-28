@@ -53,14 +53,14 @@ void print_usage(char *prog_name) {
     fprintf(stdout, "\t-help = print this usage and exit\n");
     fprintf(stdout, "\t-verbose = print info\n");
     fprintf(stdout, "\t-a = adds meta information if not already present.\n");
-    fprintf(stdout, 
-	"\t-c = change meta information, creates if no meta information present\n");
-    fprintf(stdout, 
-	"\t-q = query meta information\n");
-    fprintf(stdout, 
-	"\t-cop = copies meta information from template.\n");
-    fprintf(stdout, 
-	"\t-template = query meta information\n");
+    fprintf(stdout,
+            "\t-c = change meta information, creates if no meta information present\n");
+    fprintf(stdout,
+            "\t-q = query meta information\n");
+    fprintf(stdout,
+            "\t-cop = copies meta information from template.\n");
+    fprintf(stdout,
+            "\t-template = query meta information\n");
     fprintf(stdout,
             "\t-unit transducer_unit = units of output of transducer to add\n");
     fprintf(stdout,
@@ -188,21 +188,21 @@ int main(int argc, char **argv) {
 
         current_arg_val = argv[current_arg_num++];
 
-	if (strcmp(current_arg_name, "-transducer") == 0) { 
-		transducer_meta = 1;
-	}
-	if (strcmp(current_arg_name, "-location") == 0) { 
-		transducer_meta = 1;
-	}
+        if (strcmp(current_arg_name, "-transducer") == 0) {
+            transducer_meta = 1;
+        }
+        if (strcmp(current_arg_name, "-location") == 0) {
+            transducer_meta = 1;
+        }
 
-	if (strcmp(current_arg_name, "-c") == 0) { 
-		command = 'c';
-	} else if (strcmp(current_arg_name, "-q") == 0) { 
-		command = 'q';
-	} else if (strcmp(current_arg_name, "-a") == 0) { 
-		command = 'a';
-	} 
-	
+        if (strcmp(current_arg_name, "-c") == 0) {
+            command = 'c';
+        } else if (strcmp(current_arg_name, "-q") == 0) {
+            command = 'q';
+        } else if (strcmp(current_arg_name, "-a") == 0) {
+            command = 'a';
+        }
+
         if (strcmp(current_arg_name, "-event") == 0) {
             event_node = current_arg_val;
         } else if (strcmp(current_arg_name, "-name") == 0) {
@@ -230,34 +230,34 @@ int main(int argc, char **argv) {
             strcpy(pubsub_server, "pubsub.");
             strcat(pubsub_server, xmpp_server);
         } else if (strcmp(current_arg_name,"-p") == 0) {
-		transducer = 1;
-	} else if (strcmp(current_arg_name, "-p") == 0) {
+            transducer = 1;
+        } else if (strcmp(current_arg_name, "-p") == 0) {
             password = current_arg_val;
-        } else if (strcmp(current_arg_name, "-template") == 0) { 
-		template = current_arg_val;
-	} else if (strcmp(current_arg_name, "-unit") == 0){ 
-		
-	} else if (strcmp(current_arg_name, "-max_value") == 0){ 
-		
-	} else if (strcmp(current_arg_name, "-min_value") == 0){ 
-		
-	} else if (strcmp(current_arg_name, "-type") == 0){ 
-		
-	} else if (strcmp(current_arg_name, "-pn") == 0){ 
-		
-	} else if (strcmp(current_arg_name, "-pv") == 0){ 
-		
-	} else if (strcmp(current_arg_name, "-resolution") == 0){ 
-		
-	} else if (strcmp(current_arg_name, "-accuracy") == 0){ 
-		
-	} else if (strcmp(current_arg_name, "-interface") == 0){ 
-		
-	} else if (strcmp(current_arg_name, "-manufacturer") == 0){ 
-		
-	} else if (strcmp(current_arg_name, "-precision") == 0){ 
-		
-	} else {
+        } else if (strcmp(current_arg_name, "-template") == 0) {
+            template = current_arg_val;
+        } else if (strcmp(current_arg_name, "-unit") == 0) {
+
+        } else if (strcmp(current_arg_name, "-max_value") == 0) {
+
+        } else if (strcmp(current_arg_name, "-min_value") == 0) {
+
+        } else if (strcmp(current_arg_name, "-type") == 0) {
+
+        } else if (strcmp(current_arg_name, "-pn") == 0) {
+
+        } else if (strcmp(current_arg_name, "-pv") == 0) {
+
+        } else if (strcmp(current_arg_name, "-resolution") == 0) {
+
+        } else if (strcmp(current_arg_name, "-accuracy") == 0) {
+
+        } else if (strcmp(current_arg_name, "-interface") == 0) {
+
+        } else if (strcmp(current_arg_name, "-manufacturer") == 0) {
+
+        } else if (strcmp(current_arg_name, "-precision") == 0) {
+
+        } else {
             fprintf(stderr, "Unknown argument: %s\n", current_arg_name);
             print_usage(argv[0]);
             return -1;
@@ -310,16 +310,16 @@ int main(int argc, char **argv) {
 
     response = mio_response_new();
     meta->timestamp = mio_timestamp_create();
-    if (command == 'r') { 
-	if (!transducer) { 
-    	    err = mio_meta_merge_publish(conn, event_node, meta, NULL, NULL, response);
-	} else { 
-    	    err = mio_meta_merge_publish(conn, event_node, meta, NULL, NULL, response);
-	}
-    } else if (command == 'c') { 
-	    err = mio_meta_publish(conn, event_node, meta, response);
-    } else if (command == 'q') { 
-	    err = mio_meta_query(conn, event_node, response);
+    if (command == 'r') {
+        if (!transducer) {
+            err = mio_meta_merge_publish(conn, event_node, meta, NULL, NULL, response);
+        } else {
+            err = mio_meta_merge_publish(conn, event_node, meta, NULL, NULL, response);
+        }
+    } else if (command == 'c') {
+        err = mio_meta_publish(conn, event_node, meta, response);
+    } else if (command == 'q') {
+        err = mio_meta_query(conn, event_node, response);
     }
 
     mio_response_print(response);

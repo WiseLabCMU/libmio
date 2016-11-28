@@ -36,9 +36,9 @@
 #include "mio_collection.h"
 
 #ifdef __APPLE__
-    #include <sys/time.h>
+#include <sys/time.h>
 #else
-    #include <time.h>
+#include <time.h>
 #endif
 
 mio_log_level_t _mio_log_level = MIO_LEVEL_ERROR;
@@ -71,9 +71,9 @@ mio_conn_t *mio_conn_new(mio_log_level_t log_level) {
     pthread_rwlock_init(&conn->mio_hash_lock, NULL );
     TAILQ_INIT(&conn->pubsub_rx_queue);
 
-    #ifdef __linux__
-        conn->mio_open_requests = sem_open("mio_open_requests",O_CREAT);
-    #endif
+#ifdef __linux__
+    conn->mio_open_requests = sem_open("mio_open_requests",O_CREAT);
+#endif
 
     switch (log_level) {
     case MIO_LEVEL_DEBUG:
@@ -570,7 +570,7 @@ mio_stanza_t *mio_stanza_new(mio_conn_t *conn) {
  */
 mio_stanza_t *mio_stanza_clone(mio_conn_t *conn, mio_stanza_t *stanza) {
     mio_stanza_t *clone = malloc(sizeof(mio_stanza_t));
-    memset(clone,0x0,sizeof(mio_stanza_t)); 
+    memset(clone,0x0,sizeof(mio_stanza_t));
     clone->xmpp_stanza = xmpp_stanza_clone(stanza->xmpp_stanza);
     return clone;
 }

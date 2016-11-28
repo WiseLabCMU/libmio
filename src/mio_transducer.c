@@ -73,11 +73,11 @@ int mio_publish_data(mio_conn_t *conn, mio_data_t *data, mio_response_t *respons
 
     for (i = 0; i < data->num_transducers; i++) {
         if (i == (data->num_transducers-1) ) {
-             if (response_tmp != NULL) mio_response_free(response_tmp);
-             response_tmp = response;
+            if (response_tmp != NULL) mio_response_free(response_tmp);
+            response_tmp = response;
         } else {
-             if(response_tmp != NULL)mio_response_free(response_tmp);
-             response_tmp = mio_response_new();
+            if(response_tmp != NULL)mio_response_free(response_tmp);
+            response_tmp = mio_response_new();
         }
         data_item = mio_transducer_data_to_item(conn,tran_tmp);
         err = mio_item_publish_data(conn, data_item, data->event,response_tmp);
@@ -89,7 +89,7 @@ int mio_publish_data(mio_conn_t *conn, mio_data_t *data, mio_response_t *respons
         mio_stanza_free(data_item);
         tran_tmp = tran_tmp->next;
     }
-    return MIO_OK; 
+    return MIO_OK;
 }
 
 mio_stanza_t* mio_transducer_data_to_item(mio_conn_t *conn, mio_transducer_data_t* transducer) {

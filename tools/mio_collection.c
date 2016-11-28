@@ -55,7 +55,7 @@ void print_usage(char *prog_name) {
     fprintf(stdout, "\t-verbose = print info\n");
     fprintf(stdout, "\t-title = name of collection node when creating\n");
     fprintf(stdout, "\t-acm = access control model of collection node\n");
-    
+
     fprintf(stdout, "\t-a = add child node with id child id \n");
     fprintf(stdout, "\t-c = create collection node with collection id\n");
     fprintf(stdout, "\t-r = remove child node with id child id\n");
@@ -139,15 +139,15 @@ int main(int argc, char **argv) {
             command = 'r';
         } else if (strcmp(current_arg_name, "-c") == 0) {
             command = 'c';
-        } else if (strcmp(current_arg_name, "-title") == 0) { 
-	    title = current_arg_val;
-	} else if (strcmp(current_arg_name, "-child") == 0) { 
-	    child = current_arg_val;
-	} else if (strcmp(current_arg_name, "-parent") == 0) { 
-	    parent = current_arg_val;
-	} else if (strcmp(current_arg_name, "-stanza") == 0) { 
-	    stanza = 1;
-	} else {
+        } else if (strcmp(current_arg_name, "-title") == 0) {
+            title = current_arg_val;
+        } else if (strcmp(current_arg_name, "-child") == 0) {
+            child = current_arg_val;
+        } else if (strcmp(current_arg_name, "-parent") == 0) {
+            parent = current_arg_val;
+        } else if (strcmp(current_arg_name, "-stanza") == 0) {
+            stanza = 1;
+        } else {
             fprintf(stderr, "Unknown argument: %s\n", current_arg_name);
             print_usage(argv[0]);
             return -1;
@@ -171,12 +171,12 @@ int main(int argc, char **argv) {
             print_usage(argv[0]);
             return -1;
         }
-    } else if (command == 0) { 
+    } else if (command == 0) {
         fprintf(stderr, "No command provided\n");
-	return -1;
-    } else if (command == 'c' && title == NULL) { 
+        return -1;
+    } else if (command == 'c' && title == NULL) {
         fprintf(stderr, "No title for node provided\n");
-	return -1;
+        return -1;
     }
 
     if (verbose) {
@@ -188,24 +188,24 @@ int main(int argc, char **argv) {
     }
 
     response = mio_response_new();
-    if (command == 'q') { 
-    	err = mio_collection_children_query(conn, collection_node, response);
+    if (command == 'q') {
+        err = mio_collection_children_query(conn, collection_node, response);
         mio_response_print(response);
-	mio_response_free(response);
-	response = mio_response_new();
-    	err = mio_collection_parents_query(conn, collection_node, response);
-    } else if (command == 'c') { 
-    	err = mio_collection_node_create(conn, collection_node, title, 
-			response);
-    } else if (command == 'a') { 
-    	err = mio_collection_child_add(conn, child, parent,
-			response);
+        mio_response_free(response);
+        response = mio_response_new();
+        err = mio_collection_parents_query(conn, collection_node, response);
+    } else if (command == 'c') {
+        err = mio_collection_node_create(conn, collection_node, title,
+                                         response);
+    } else if (command == 'a') {
+        err = mio_collection_child_add(conn, child, parent,
+                                       response);
     } else {  // command == 'r'
-    	err = mio_collection_child_remove(conn, child, parent, 
-			response);
+        err = mio_collection_child_remove(conn, child, parent,
+                                          response);
     }
-    if (err != MIO_OK) { 
-	    fprintf(stderr, "Something went wrong\n");
+    if (err != MIO_OK) {
+        fprintf(stderr, "Something went wrong\n");
     }
 
     mio_response_print(response);

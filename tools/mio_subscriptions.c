@@ -110,18 +110,18 @@ int main(int argc, char **argv) {
             command = 'q';
             continue;
         }
-	
-	if (strcmp(current_arg_name, "-a") == 0) {
+
+        if (strcmp(current_arg_name, "-a") == 0) {
             command = 'a';
             continue;
         }
 
-	if (strcmp(current_arg_name, "-r") == 0) {
+        if (strcmp(current_arg_name, "-r") == 0) {
             command = 'r';
             continue;
         }
-	
-	if (strcmp(current_arg_name, "-l") == 0) {
+
+        if (strcmp(current_arg_name, "-l") == 0) {
             command = 'l';
             continue;
         }

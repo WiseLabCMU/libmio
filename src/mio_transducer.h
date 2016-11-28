@@ -67,8 +67,8 @@ mio_transducer_data_t *_mio_transducer_data_tail_get(
 mio_transducer_data_t *_mio_transducer_data_tail_get(
     mio_transducer_data_t *t_value);
 
-int mio_publish_data(mio_conn_t *conn, mio_data_t *data, 
-     mio_response_t *response);
+int mio_publish_data(mio_conn_t *conn, mio_data_t *data,
+                     mio_response_t *response);
 int mio_item_transducer_data_actuate_add(mio_stanza_t *item,
         const char *deviceID, const char *value, const char *timestamp);
 int mio_item_transducer_data_add(mio_stanza_t *item, const char *deviceID,

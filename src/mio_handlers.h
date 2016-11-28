@@ -103,7 +103,7 @@ int mio_handler_generic_timed(xmpp_conn_t * const conn,
                               void * const mio_handler_data);
 
 int mio_handler_keepalive(mio_conn_t * const conn,
-        mio_stanza_t * const stanza, mio_response_t *response, void *userdata);
+                          mio_stanza_t * const stanza, mio_response_t *response, void *userdata);
 size_t mio_handler_admin_user_functions(void*, size_t, size_t, void*);
 int mio_handler_check_jid_registered(mio_conn_t* const, mio_stanza_t* const);
 int mio_handler_item_recent_get(mio_conn_t * const conn,
