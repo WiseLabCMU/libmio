@@ -148,34 +148,6 @@ static void *_mio_run(mio_handler_data_t *mio_handler_data) {
     tp_add.tv_sec = 0;
     tp_add.tv_usec = MIO_SEND_REQUEST_TIMEOUT;
 
-    // Ignore broken pipe signal
-    signal(SIGPIPE, SIG_IGN);
-
-// Initiate connection
-    mio_info("Connecting to XMPP server %s using JID %s",
-             mio_handler_data->conn->xmpp_conn->domain,
-             mio_handler_data->conn->xmpp_conn->jid);
-    err = xmpp_connect_client(mio_handler_data->conn->xmpp_conn, NULL, 0,
-                              mio_handler_conn_generic, mio_handler_data);
-    if (err < 0) {
-        mio_error("Error connecting to XMPP server %s using JID %s",
-                  mio_handler_data->conn->xmpp_conn->domain,
-                  mio_handler_data->conn->xmpp_conn->jid);
-        pthread_exit((void*) MIO_ERROR_CONNECTION);
-    }
-
-// Add keepalive handler
-    mio_handler_timed_add(mio_handler_data->conn,
-                          (mio_handler) mio_handler_keepalive, KEEPALIVE_PERIOD, NULL);
-
-    mio_debug("Starting Event Loop");
-    conn->presence_status = MIO_PRESENCE_UNKNOWN;
-
-// Run event loop
-    if (ctx->loop_status != XMPP_LOOP_NOTSTARTED) {
-        mio_error("Cannot run event loop because not started");
-        pthread_exit((void*) MIO_ERRROR_EVENT_LOOP_NOT_STARTED);
-    }
 
     ctx->loop_status = XMPP_LOOP_RUNNING;
     while (ctx->loop_status == XMPP_LOOP_RUNNING) {
@@ -236,17 +208,18 @@ int mio_connect(char *jid, char *pass, mio_handler_conn conn_handler,
 
     int err = MIO_OK;
     mio_handler_data_t *shd;
-    pthread_t mio_run_thread;
     mio_response_t *response;
     mio_response_error_t *response_err;
     struct timespec ts;
     struct timeval tp;
+    xmpp_ctx_t *ctx;
     pthread_attr_t attr;
 
     shd = _mio_handler_data_new();
     shd->conn = conn;
     shd->userdata = conn_handler_user_data;
     shd->conn_handler = conn_handler;
+    shd->response = mio_response_new();
 
     sem_unlink(jid);
     conn->mio_open_requests = sem_open(jid, O_CREAT, S_IROTH | S_IWOTH,
@@ -259,9 +232,41 @@ int mio_connect(char *jid, char *pass, mio_handler_conn conn_handler,
     xmpp_conn_set_jid(conn->xmpp_conn, jid);
     xmpp_conn_set_pass(conn->xmpp_conn, pass);
 
+    ctx = conn->xmpp_conn->ctx;
+    // Ignore broken pipe signal
+    signal(SIGPIPE, SIG_IGN);
+
+// Initiate connection
+    mio_info("Connecting to XMPP server %s using JID %s",
+             shd->conn->xmpp_conn->domain,
+             shd->conn->xmpp_conn->jid);
+    err = xmpp_connect_client(shd->conn->xmpp_conn, NULL, 0,
+                              mio_handler_conn_generic, shd);
+    //if (err < 0) {
+    if (shd->response->response_type == MIO_RESPONSE_ERROR) {
+        mio_error("Error connecting to XMPP server %s using JID %s",
+                  shd->conn->xmpp_conn->domain,
+                  shd->conn->xmpp_conn->jid);
+        fprintf(stdout,"%d %d\n", MIO_OK, MIO_ERROR_CONNECTION);
+        return MIO_ERROR_CONNECTION;
+    }
+
+// Add keepalive handler
+    mio_handler_timed_add(shd->conn,
+                          (mio_handler) mio_handler_keepalive, KEEPALIVE_PERIOD, NULL);
+
+    mio_debug("Starting Event Loop");
+    conn->presence_status = MIO_PRESENCE_UNKNOWN;
+
+// Run event loop
+    if (ctx->loop_status != XMPP_LOOP_NOTSTARTED) {
+        mio_error("Cannot run event loop because not started");
+        return MIO_ERRROR_EVENT_LOOP_NOT_STARTED;
+    }
     pthread_attr_init(&attr);
     pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
-    err = pthread_create(&mio_run_thread, &attr, (void *) _mio_run, shd);
+    conn->mio_run_thread = malloc(sizeof(pthread_t));
+    err = pthread_create(conn->mio_run_thread, &attr, (void *) _mio_run, shd);
     pthread_attr_destroy(&attr);
 
     if (err == 0)
