@@ -46,6 +46,7 @@ void print_usage(char *prog_name) {
     fprintf(stdout, "\t-p password = JID user password\n");
     fprintf(stdout, "\t-help = print this usage and exit\n");
     fprintf(stdout, "\t-verbose = print info\n");
+    fprintf(stdout, "\t-server = server where event node resides, if not same as jid\n");
     fprintf(stdout, "\t-stanza = only print the affiliations stanza\n\n");
     fprintf(stdout, "Commands:\n");
     fprintf(stdout, "\t-r = remove\n");
@@ -83,8 +84,9 @@ arg_t * parse_arguments(int argc, char** argv) {
     memset(args,0x0,sizeof(arg_t));
     while (current_arg_num < argc) {
         current_arg_name = argv[current_arg_num];
-        if (current_arg_num+1 < argc)
+        if (current_arg_num+1 < argc) {
             current_arg_val = argv[current_arg_num+1];
+        }
         current_arg_num++;
 
         if (strcmp(current_arg_name, "-r") == 0) {
@@ -98,6 +100,10 @@ arg_t * parse_arguments(int argc, char** argv) {
         }
         if (strcmp(current_arg_name, "-q") == 0) {
             args->command = 'q';
+            continue;
+        }
+        if (strcmp(current_arg_name, "-server") == 0) {
+            args->pubsub_server = current_arg_val;
             continue;
         }
         if (strcmp(current_arg_name, "-affil") == 0) {
@@ -141,7 +147,21 @@ arg_t * parse_arguments(int argc, char** argv) {
             args->stanza = 1;
             continue;
         }
-
+        if (strcmp(current_arg_name, "-c") == 0) {
+            if (strcmp(current_arg_val, "remove") == 0) {
+                args->command = 'r';
+            } else if (strcmp(current_arg_val, "add") == 0) {
+                args->command = 'a';
+            } else if (strcmp(current_arg_val, "query") == 0) {
+                args->command = 'q';
+            }
+        } else if (strcmp(current_arg_name,"-r")) {
+            args->command = 'r';
+        } else if (strcmp(current_arg_name,"-a")) {
+            args->command = 'a';
+        } else if (strcmp(current_arg_name,"-q")) {
+            args->command = 'r';
+        }
         if (strcmp(current_arg_name, "-event") == 0) {
             args->event = current_arg_val;
             current_arg_num++;
@@ -233,10 +253,14 @@ int main(int argc, char **argv) {
         fprintf(stdout, "\n");
 
         conn = mio_conn_new(MIO_LEVEL_DEBUG);
-        mio_connect(args->jid, args->password, NULL, NULL, conn);
+        err = mio_connect(args->jid, args->password, NULL, NULL, conn);
     } else {
         conn = mio_conn_new(MIO_LEVEL_ERROR);
-        mio_connect(args->jid, args->password, NULL, NULL, conn);
+        err = mio_connect(args->jid, args->password, NULL, NULL, conn);
+    }
+    if (err != MIO_OK) {
+        mio_conn_free(conn);
+        return err;
     }
 
     response = mio_response_new();

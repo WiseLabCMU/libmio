@@ -351,7 +351,7 @@ void mio_parser_characters(void *userdata, const XML_Char *s, int len) {
 void mio_handler_conn_generic(xmpp_conn_t * const conn,
                               const xmpp_conn_event_t status, const int error,
                               xmpp_stream_error_t * const stream_error, void * const mio_handler_data) {
-
+ 
     mio_request_t *request, *request_tmp;
     mio_handler_data_t *shd = (mio_handler_data_t *) mio_handler_data;
     mio_conn_t *mio_conn = shd->conn;
@@ -359,6 +359,7 @@ void mio_handler_conn_generic(xmpp_conn_t * const conn,
         shd->response = mio_response_new();
     mio_debug("In conn_handler");
 
+    printf("Status %d, error %d, stream error \n", status,error);
     if (status == XMPP_CONN_CONNECT) {
         shd->response->response_type = MIO_RESPONSE_OK;
         mio_debug("In conn_handler : Connected");
@@ -366,6 +367,7 @@ void mio_handler_conn_generic(xmpp_conn_t * const conn,
             shd->conn_handler(shd->conn, MIO_CONN_CONNECT, shd->response,
                               shd->userdata);
 
+	mio_conn->has_connected = 1;
         // If a reconnect happened, clean up all waiting threads
         if (mio_conn->retries > 0) {
             mio_conn->retries = 0;
@@ -396,6 +398,28 @@ void mio_handler_conn_generic(xmpp_conn_t * const conn,
                            &shd->conn->conn_predicate);
 
         // If the connection fails, try to reconnect up to MIO_CONNECTION_RETRIES times
+    } else if ( status == XMPP_CONN_FAIL ) {
+        mio_response_error_t *err;
+        mio_error(
+            "XMPP connection failed. Check jid's domain domain.");
+        err = _mio_response_error_new();
+        err->err_num = MIO_ERROR_CONNECTION;
+        err->description = strdup("MIO_ERROR_CONNECTION");
+        shd->response->response = err;
+        shd->response->response_type = MIO_RESPONSE_ERROR;
+        mio_cond_broadcast(&shd->conn->conn_cond, &shd->conn->conn_mutex,
+                           &shd->conn->conn_predicate);
+    } else if (!mio_conn->has_connected) { 
+	mio_response_error_t *err;
+        mio_error(
+            "XMPP connection failed. Check jid's domain domain.");
+        err = _mio_response_error_new();
+        err->err_num = MIO_ERROR_CONNECTION;
+        err->description = strdup("MIO_ERROR_CONNECTION");
+        shd->response->response = err;
+        shd->response->response_type = MIO_RESPONSE_ERROR;
+        mio_cond_broadcast(&shd->conn->conn_cond, &shd->conn->conn_mutex,
+                           &shd->conn->conn_predicate);
     }
 #ifdef MIO_CONNECTION_RETRIES
     else if (mio_conn->retries < MIO_CONNECTION_RETRIES) {

@@ -53,6 +53,7 @@ void print_usage(char *prog_name) {
     fprintf(stdout,
             "\t-j username = JID (give the full JID, i.e. user@domain)\n");
     fprintf(stdout, "\t-p password = JID user password\n");
+    fprintf(stdout, "\t-server = server where event node resides, if not same as jid\n");
     fprintf(stdout,
             "\t-id transducer_id = id (name) of transducer within message\n");
     fprintf(stdout, "\t-help = print this usage and exit\n");
@@ -80,6 +81,7 @@ int main(int argc, char **argv) {
     int xmpp_server_port = 5223;
 
     int verbose = 0;
+    int error;
 
     int current_arg_num = 1;
     char *current_arg_name = NULL;
@@ -119,7 +121,10 @@ int main(int argc, char **argv) {
 
         current_arg_val = argv[current_arg_num++];
 
-        if (strcmp(current_arg_name, "-event") == 0) {
+        if (strcmp(current_arg_name, "-server") == 0) {
+            strcpy(pubsub_server, current_arg_val);
+            continue;
+        } else if (strcmp(current_arg_name, "-event") == 0) {
             event_node = current_arg_val;
         } else if (strcmp(current_arg_name, "-int") == 0) {
             interface = current_arg_val;
@@ -184,11 +189,15 @@ int main(int argc, char **argv) {
         fprintf(stdout, "\n");
 
         conn = mio_conn_new(MIO_LEVEL_DEBUG);
-        mio_connect(username, password, NULL, NULL, conn);
+        error = mio_connect(username, password, NULL, NULL, conn);
 
     } else {
         conn = mio_conn_new(MIO_LEVEL_ERROR);
-        mio_connect(username, password, NULL, NULL, conn);
+        error =  mio_connect(username, password, NULL, NULL, conn);
+    }
+    if (err != MIO_OK) {
+        mio_conn_free(conn);
+        return error;
     }
 
     time_str = mio_timestamp_create();

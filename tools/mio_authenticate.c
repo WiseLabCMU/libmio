@@ -36,11 +36,11 @@ mio_conn_t *conn;
 void print_usage(char *prog_name) {
     fprintf(stdout, "\"%s\" Command line utility to authenticate a JID\n",
             prog_name);
-    fprintf(stdout, "Usage: %s <-u username> <-p password> [-verbose]\n",
+    fprintf(stdout, "Usage: %s <-j username> <-p password> [-verbose]\n",
             prog_name);
     fprintf(stdout, "Usage: %s -help\n", prog_name);
     fprintf(stdout,
-            "\t-u username = JID to authenticate (give the full JID, i.e. user@domain)\n");
+            "\t-j username = JID to authenticate (give the full JID, i.e. user@domain)\n");
     fprintf(stdout, "\t-p password = JID user password\n");
     fprintf(stdout, "\t-help = print this usage and exit\n");
     fprintf(stdout, "\t-verbose = print info\n");
@@ -100,7 +100,7 @@ int main(int argc, char **argv) {
 
         current_arg_val = argv[current_arg_num++];
 
-        if (strcmp(current_arg_name, "-u") == 0) {
+        if (strcmp(current_arg_name, "-j") == 0) {
             username = current_arg_val;
             xmpp_server = mio_get_server(username);
             if (xmpp_server == NULL ) {
@@ -153,12 +153,13 @@ int main(int argc, char **argv) {
                           conn);
     }
 
-    if (err == MIO_OK)
+    if (err == MIO_OK) {
         fprintf(stdout, "Authentication successful\n");
-    else
+        mio_disconnect(conn);
+    } else {
         fprintf(stderr, "Authentication failed\n");
+    }
 
-    mio_disconnect(conn);
     mio_conn_free(conn);
     return err;
 }

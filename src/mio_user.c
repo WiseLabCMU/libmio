@@ -242,12 +242,11 @@ int mio_connect(char *jid, char *pass, mio_handler_conn conn_handler,
              shd->conn->xmpp_conn->jid);
     err = xmpp_connect_client(shd->conn->xmpp_conn, NULL, 0,
                               mio_handler_conn_generic, shd);
-    //if (err < 0) {
-    if (shd->response->response_type == MIO_RESPONSE_ERROR) {
+    if (err < 0) {
         mio_error("Error connecting to XMPP server %s using JID %s",
                   shd->conn->xmpp_conn->domain,
                   shd->conn->xmpp_conn->jid);
-        fprintf(stdout,"%d %d\n", MIO_OK, MIO_ERROR_CONNECTION);
+	fprintf(stdout,"Error connecting %d %d\n", MIO_OK, MIO_ERROR_CONNECTION);
         return MIO_ERROR_CONNECTION;
     }
 
@@ -316,8 +315,10 @@ int mio_connect(char *jid, char *pass, mio_handler_conn conn_handler,
             return err;
         }
     }
+    fprintf(stdout,"ERROR rpredicate\n");
     mio_handler_data_free(shd);
     return MIO_ERROR_PREDICATE;
+    //return !MIO_OK;
 }
 
 int mio_reconnect(mio_conn_t *conn) {

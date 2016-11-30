@@ -123,7 +123,8 @@ typedef struct {
     pthread_rwlock_t mio_hash_lock;
     mio_request_t *mio_request_table;
     int pubsub_rx_queue_len, pubsub_rx_listening, send_request_predicate,
-        conn_predicate, retries;
+        conn_predicate, retries, has_connected;
+    pthread_t *mio_run_thread;
 } mio_conn_t;
 
 typedef enum {
