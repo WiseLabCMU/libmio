@@ -80,7 +80,7 @@ int main(int argc, char **argv) {
     char *cur_item = NULL;
     char *event_node = NULL;
     char *item_id = NULL;
-    char **buf;
+    char *buf;
     int buflen;
 
     int max_items = 10;
@@ -88,6 +88,7 @@ int main(int argc, char **argv) {
     int stanza = 0;
     int item_count = 0;
     int n_items = 500;
+
 
     struct sigaction sig_int_handler;
 
@@ -120,15 +121,16 @@ int main(int argc, char **argv) {
             continue;
         }
 
-        if (current_arg_num == argc) {
-            print_usage(argv[0]);
-            return -1;
-        }
+        //if (current_arg_num == argc) {
+        //    print_usage(argv[0]);
+        //    return -1;
+        //}
 
-        current_arg_val = argv[current_arg_num++];
+        current_arg_val = argv[current_arg_num];
 
         if (strcmp(current_arg_name, "-event") == 0) {
             event_node = current_arg_val;
+	    current_arg_num++;
         } else if (strcmp(current_arg_name, "-u") == 0) {
             username = current_arg_val;
             xmpp_server = mio_get_server(username);
@@ -138,14 +140,18 @@ int main(int argc, char **argv) {
             }
             strcpy(pubsub_server, "pubsub.");
             strcat(pubsub_server, xmpp_server);
+	    current_arg_num++;
         } else if (strcmp(current_arg_name, "-p") == 0) {
             password = current_arg_val;
+	    current_arg_num++;
         } else if (strcmp(current_arg_name, "-id") == 0) {
             item_id = current_arg_val;
+	    current_arg_num++;
         } else if (strcmp(current_arg_name, "-stanza") == 0) {
             stanza = 1;
         } else if (strcmp(current_arg_name, "-max") == 0) {
             max_items = atoi(current_arg_val);
+	    current_arg_num++;
         } else {
             fprintf(stderr, "Unknown argument: %s\n", current_arg_name);
             print_usage(argv[0]);
@@ -181,13 +187,18 @@ int main(int argc, char **argv) {
         fprintf(stdout, "\n");
 
         conn = mio_conn_new(MIO_LEVEL_DEBUG);
-        mio_connect(username, password, NULL, NULL, conn);
+        err = mio_connect(username, password, NULL, NULL, conn);
 
     } else {
         conn = mio_conn_new(MIO_LEVEL_ERROR);
-        mio_connect(username, password, NULL, NULL, conn);
+        err = mio_connect(username, password, NULL, NULL, conn);
     }
 
+    if (err != MIO_OK) { 
+	    mio_conn_free(conn);
+	    fprintf(stdout, "Could not connect to xmpp server.");
+	    return err;
+    }
     response = mio_response_new();
 
     if (!stanza) {
@@ -211,10 +222,9 @@ int main(int argc, char **argv) {
             mio_response_print(response);
         }
     } else {
-
         cur_item = strtok(item_id, ",");
-        //item_holder = malloc(n_items*sizeof(char*));
         item_count = 0;
+	item_holder = malloc(n_items);
         while (cur_item) {
             item_holder[item_count] = cur_item;
             cur_item = strtok(NULL,",");
@@ -234,10 +244,9 @@ int main(int argc, char **argv) {
             mio_response_free(response);
         }
 
-
         if ((response->stanza == NULL) ||
-                (response->stanza->xmpp_stanza == NULL) ||
-                (response->stanza->xmpp_stanza->children== NULL)) {
+            (response->stanza->xmpp_stanza == NULL) ||
+            (response->stanza->xmpp_stanza->children== NULL)) {
         } else if (err == MIO_OK) {
             if (item_count == 1) {
                 item = xmpp_stanza_get_child_by_name(
@@ -246,10 +255,11 @@ int main(int argc, char **argv) {
                 item = xmpp_stanza_get_child_by_name(
                            response->stanza->xmpp_stanza->children, "items");
             }
+	    buf = malloc(sizeof(buflen));
             if (item != NULL ) {
                 xmpp_stanza_to_text(item, (char**) &buf, (size_t*) &buflen);
                 fprintf(stdout, "%s", (char*) buf);
-                free(buf);
+                //free(buf);
             }
         }
 

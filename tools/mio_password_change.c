@@ -39,12 +39,12 @@ void print_usage(char *prog_name) {
             "\"%s\" Command line utility to change the password of a JID\n",
             prog_name);
     fprintf(stdout,
-            "Usage: %s <-np new_password> <-u username> <-p old_password> [-verbose]\n",
+            "Usage: %s <-np new_password> <-j username> <-p old_password> [-verbose]\n",
             prog_name);
     fprintf(stdout, "Usage: %s -help\n", prog_name);
     fprintf(stdout, "\t-np new_password = new password to set\n");
     fprintf(stdout,
-            "\t-u username = JID (give the full JID, i.e. user@domain)\n");
+            "\t-j username = JID (give the full JID, i.e. user@domain)\n");
     fprintf(stdout, "\t-p old_password = Current JID user password\n");
     fprintf(stdout, "\t-help = print this usage and exit\n");
     fprintf(stdout, "\t-verbose = print info\n");
@@ -110,7 +110,7 @@ int main(int argc, char **argv) {
 
         if (strcmp(current_arg_name, "-np") == 0) {
             np = current_arg_val;
-        } else if (strcmp(current_arg_name, "-u") == 0) {
+        } else if (strcmp(current_arg_name, "-j") == 0) {
             username = current_arg_val;
             xmpp_server = mio_get_server(username);
             if (xmpp_server == NULL ) {
@@ -160,11 +160,15 @@ int main(int argc, char **argv) {
         fprintf(stdout, "\n");
 
         conn = mio_conn_new(MIO_LEVEL_DEBUG);
-        mio_connect(username, password, NULL, NULL, conn);
+        err = mio_connect(username, password, NULL, NULL, conn);
 
     } else {
         conn = mio_conn_new(MIO_LEVEL_ERROR);
-        mio_connect(username, password, NULL, NULL, conn);
+        err = mio_connect(username, password, NULL, NULL, conn);
+    }
+    if (err != MIO_OK) { 
+	    mio_conn_free(conn);
+	    return err;
     }
 
     response = mio_response_new();

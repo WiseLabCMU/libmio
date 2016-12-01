@@ -38,7 +38,7 @@ mio_response_t *response;
 
 void print_usage(char *prog_name) {
     fprintf(stdout,
-            "Usage: %s <-event event_node> <-name meta_name> <-type meta_type> [-info meta_info] <-u username> <-p password> [-verbose]\n",
+            "Usage: %s <-event event_node> <-name meta_name> <-type meta_type> [-info meta_info] <-j username> <-p password> [-verbose]\n",
             prog_name);
     fprintf(stdout, "Usage: %s -help\n", prog_name);
     fprintf(stdout, "\t-event event_node = name of event node to publish to\n");
@@ -48,7 +48,7 @@ void print_usage(char *prog_name) {
     fprintf(stdout,
             "\t-info meta_info = description of the meta information to add\n");
     fprintf(stdout,
-            "\t-u username = JID (give the full JID, i.e. user@domain)\n");
+            "\t-j username = JID (give the full JID, i.e. user@domain)\n");
     fprintf(stdout, "\t-p password = JID user password\n");
     fprintf(stdout, "\t-help = print this usage and exit\n");
     fprintf(stdout, "\t-verbose = print info\n");
@@ -85,11 +85,6 @@ void print_usage(char *prog_name) {
             "\t-info trans_info = description of the transducer to add\n");
     fprintf(stdout,
             "\t-interface trans_interface = interface of the transducer to add\n");
-    fprintf(stdout,
-            "\t-u username = JID (give the full JID, i.e. user@domain)\n");
-
-
-
 
 
     fprintf(stdout,
@@ -220,7 +215,7 @@ int main(int argc, char **argv) {
                 meta->meta_type = MIO_META_TYPE_GATEWAY;
             if (strcmp(current_arg_val, "adapter") == 0)
                 meta->meta_type = MIO_META_TYPE_ADAPTER;
-        } else if (strcmp(current_arg_name, "-u") == 0) {
+        } else if (strcmp(current_arg_name, "-j") == 0) {
             username = current_arg_val;
             xmpp_server = mio_get_server(username);
             if (xmpp_server == NULL ) {
@@ -229,8 +224,6 @@ int main(int argc, char **argv) {
             }
             strcpy(pubsub_server, "pubsub.");
             strcat(pubsub_server, xmpp_server);
-        } else if (strcmp(current_arg_name,"-p") == 0) {
-            transducer = 1;
         } else if (strcmp(current_arg_name, "-p") == 0) {
             password = current_arg_val;
         } else if (strcmp(current_arg_name, "-template") == 0) {
@@ -301,11 +294,17 @@ int main(int argc, char **argv) {
         fprintf(stdout, "\n");
 
         conn = mio_conn_new(MIO_LEVEL_DEBUG);
-        mio_connect(username, password, NULL, NULL, conn);
+        err = mio_connect(username, password, NULL, NULL, conn);
 
     } else {
         conn = mio_conn_new(MIO_LEVEL_ERROR);
-        mio_connect(username, password, NULL, NULL, conn);
+        err = mio_connect(username, password, NULL, NULL, conn);
+    }
+
+    if (err != MIO_OK) { 
+	    mio_conn_free(conn);
+	    fprintf(stdout, "Could not connect to xmpp server.");
+	    return err;
     }
 
     response = mio_response_new();

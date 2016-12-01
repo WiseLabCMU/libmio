@@ -23,3 +23,15 @@ src/.deps
 *.swp
 tools/.deps
 *.dSYM
+*.a
+mio_acl            
+mio_actuate        
+mio_authenticate   
+mio_collection     
+mio_item_query     
+mio_meta           
+mio_node           
+mio_password_change
+mio_publish_data       
+mio_reference
+mio_subscriptions     

@@ -175,13 +175,18 @@ int main(int argc, char **argv) {
         fprintf(stdout, "\n");
 
         conn = mio_conn_new(MIO_LEVEL_DEBUG);
-        mio_connect(username, password, NULL, NULL, conn);
+        err = mio_connect(username, password, NULL, NULL, conn);
 
     } else {
         conn = mio_conn_new(MIO_LEVEL_ERROR);
-        mio_connect(username, password, NULL, NULL, conn);
+        err = mio_connect(username, password, NULL, NULL, conn);
     }
 
+    if (err != MIO_OK) {
+	mio_conn_free(conn);
+	fprintf(stdout,"Could not connect to XMPP\n");
+	return err;
+    }
     time_str = mio_timestamp_create();
     data = mio_transducer_data_new();
     data->type = (mio_transducer_data_type_t) MIO_TRANSDUCER_DATA;

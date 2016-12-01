@@ -359,7 +359,6 @@ void mio_handler_conn_generic(xmpp_conn_t * const conn,
         shd->response = mio_response_new();
     mio_debug("In conn_handler");
 
-    printf("Status %d, error %d, stream error \n", status,error);
     if (status == XMPP_CONN_CONNECT) {
         shd->response->response_type = MIO_RESPONSE_OK;
         mio_debug("In conn_handler : Connected");

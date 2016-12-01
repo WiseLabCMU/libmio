@@ -259,6 +259,7 @@ int main(int argc, char **argv) {
         err = mio_connect(args->jid, args->password, NULL, NULL, conn);
     }
     if (err != MIO_OK) {
+	fprintf(stdout, "Could not connect to XMPP server\n");
         mio_conn_free(conn);
         return err;
     }

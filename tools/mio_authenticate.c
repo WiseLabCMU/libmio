@@ -146,13 +146,17 @@ int main(int argc, char **argv) {
         conn = mio_conn_new(MIO_LEVEL_DEBUG);
         err = mio_connect(username, password, NULL, NULL,
                           conn);
-
     } else {
         conn = mio_conn_new(MIO_LEVEL_ERROR);
         err = mio_connect(username, password, NULL, NULL,
                           conn);
     }
 
+    if (err != MIO_OK) { 
+	    mio_conn_free(conn);
+	    fprintf(stdout, "Could not connect to xmpp server.");
+	    return err;
+    }
     if (err == MIO_OK) {
         fprintf(stdout, "Authentication successful\n");
         mio_disconnect(conn);

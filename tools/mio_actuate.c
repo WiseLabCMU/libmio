@@ -79,17 +79,12 @@ int main(int argc, char **argv) {
     char xmpp_server[80];
     char pubsub_server[80];
     int xmpp_server_port = 5223;
-
     int verbose = 0;
-    int error;
-
     int current_arg_num = 1;
     char *current_arg_name = NULL;
     char *current_arg_val = NULL;
-
     char *time_str = NULL;
     mio_stanza_t *item;
-
     struct sigaction sig_int_handler;
 
     // Add SIGINT handler
@@ -189,15 +184,15 @@ int main(int argc, char **argv) {
         fprintf(stdout, "\n");
 
         conn = mio_conn_new(MIO_LEVEL_DEBUG);
-        error = mio_connect(username, password, NULL, NULL, conn);
+        err = mio_connect(username, password, NULL, NULL, conn);
 
     } else {
         conn = mio_conn_new(MIO_LEVEL_ERROR);
-        error =  mio_connect(username, password, NULL, NULL, conn);
+        err =  mio_connect(username, password, NULL, NULL, conn);
     }
     if (err != MIO_OK) {
         mio_conn_free(conn);
-        return error;
+        return err;
     }
 
     time_str = mio_timestamp_create();

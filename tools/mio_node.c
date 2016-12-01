@@ -38,15 +38,16 @@ void print_usage(char *prog_name) {
     fprintf(stdout, "\"%s\" Command line utility to create an event node\n",
             prog_name);
     fprintf(stdout,
-            "Usage: %s <-event event_node> [-title node_title] [-access_model access_model_model] <-u username> <-p password> [-verbose]\n",
+            "Usage: %s <-event event_node> [-title node_title] [-access_model access_model_model] <-j username> <-p password> [-verbose]\n",
             prog_name);
     fprintf(stdout, "Usage: %s -help\n", prog_name);
     fprintf(stdout, "\t-event event_node = name of event node to create\n");
+    fprintf(stdout, "\t-r = remove event node\n");
     fprintf(stdout, "\t-title node_title = title of event node\n");
     fprintf(stdout,
             "\t-access access_model = access model of the node, either \"open\", \"whitelist\", \"presence\" or \"roster\"\n");
     fprintf(stdout,
-            "\t-u username = JID (give the full JID, i.e. user@domain)\n");
+            "\t-j username = JID (give the full JID, i.e. user@domain)\n");
     fprintf(stdout, "\t-p password = JID user password\n");
     fprintf(stdout, "\t-help = print this usage and exit\n");
     fprintf(stdout, "\t-verbose = print info\n");
@@ -75,7 +76,7 @@ int main(int argc, char **argv) {
     char *title = NULL;
     char *access_model = NULL;
     char *event_node = NULL;
-    int err;
+    int err, remove = 0;
 
     struct sigaction sig_int_handler;
 
@@ -89,38 +90,29 @@ int main(int argc, char **argv) {
         print_usage(argv[0]);
         return -1;
     }
-    if (argc == 1 || !strcmp(argv[1], "-help")) {
-        print_usage(argv[0]);
-        return -1;
-    }
 
     while (current_arg_num < argc) {
         current_arg_name = argv[current_arg_num++];
-
-        if (strcmp(current_arg_name, "-help") == 0) {
-            print_usage(argv[0]);
-            return -1;
-        }
-
         if (strcmp(current_arg_name, "-verbose") == 0) {
             verbose = 1;
             continue;
         }
 
-        if (current_arg_num == argc) {
+        if (strcmp(current_arg_name, "-r") == 0) {
+	    remove = 1;
+	} else if (current_arg_num == argc) {
             print_usage(argv[0]);
             return -1;
         }
 
         current_arg_val = argv[current_arg_num++];
-
         if (strcmp(current_arg_name, "-title") == 0) {
             title = current_arg_val;
         } else if (strcmp(current_arg_name, "-access") == 0) {
             access_model = current_arg_val;
         } else if (strcmp(current_arg_name, "-event") == 0) {
             event_node = current_arg_val;
-        } else if (strcmp(current_arg_name, "-u") == 0) {
+        } else if (strcmp(current_arg_name, "-j") == 0) {
             username = current_arg_val;
             xmpp_server = mio_get_server(username);
             if (xmpp_server == NULL ) {
@@ -167,15 +159,24 @@ int main(int argc, char **argv) {
         fprintf(stdout, "\n");
 
         conn = mio_conn_new(MIO_LEVEL_DEBUG);
-        mio_connect(username, password, NULL, NULL, conn);
+        err = mio_connect(username, password, NULL, NULL, conn);
 
     } else {
         conn = mio_conn_new(MIO_LEVEL_ERROR);
-        mio_connect(username, password, NULL, NULL, conn);
+        err = mio_connect(username, password, NULL, NULL, conn);
+    }
+    if (err != MIO_OK) { 
+	    mio_conn_free(conn);
+	    fprintf(stdout, "Could not connect to xmpp server.");
+	    return err;
     }
 
     response = mio_response_new();
-    err = mio_node_create(conn, event_node, title, access_model, response);
+    if (remove) { 
+	    err = mio_node_delete(conn, event_node, response);
+    } else { 
+    	err = mio_node_create(conn, event_node, title, access_model, response);
+    }
     mio_response_print(response);
     mio_response_free(response);
 
