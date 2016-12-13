@@ -29,6 +29,8 @@ libstrophe_a_SOURCES += src/parser_libxml2.c
 endif
 
 include_HEADERS = strophe.h src/*.h
+include_DIR=strophe
+
 noinst_HEADERS = strophepp.h
 
 EXTRA_DIST = docs

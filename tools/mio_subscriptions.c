@@ -39,13 +39,13 @@ void print_usage(char *prog_name) {
             "\"%s\" Command line utility to subscribe to an event node\n",
             prog_name);
     fprintf(stdout,
-            "Usage: %s <-event event_node> <-u username> <-p password> [-verbose]\n",
+            "Usage: %s <-event event_node> <-j username> <-p password> [-verbose]\n",
             prog_name);
     fprintf(stdout, "Usage: %s -help\n", prog_name);
     fprintf(stdout,
             "\t-event event_node = name of node to add subscriber to\n");
     fprintf(stdout,
-            "\t-u username = JID (give the full JID, i.e. user@domain)\n");
+            "\t-j username = JID (give the full JID, i.e. user@domain)\n");
     fprintf(stdout, "\t-q = query subscriptions\n");
     fprintf(stdout, "\t-a = add subscription\n");
     fprintf(stdout, "\t-r = remove subscription\n");
@@ -135,7 +135,7 @@ int main(int argc, char **argv) {
 
         if (strcmp(current_arg_name, "-event") == 0) {
             event_node = current_arg_val;
-        } else if (strcmp(current_arg_name, "-u") == 0) {
+        } else if (strcmp(current_arg_name, "-j") == 0) {
             username = current_arg_val;
             xmpp_server = mio_get_server(username);
             if (xmpp_server == NULL ) {
