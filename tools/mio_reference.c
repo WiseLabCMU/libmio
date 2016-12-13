@@ -189,10 +189,17 @@ int main(int argc, char **argv) {
     }
 
     response = mio_response_new();
-    if(add_ref_child)
-        mio_reference_child_add(conn, parent, child, MIO_ADD_REFERENCE_AT_CHILD, response);
-    else
-        mio_reference_child_add(conn, parent, child, MIO_NO_REFERENCE_AT_CHILD, response);
+    if(command == 'a') { 
+        if (add_ref_child) { 
+            err = mio_reference_child_add(conn, parent, child, MIO_ADD_REFERENCE_AT_CHILD, response);
+        } else { 
+            err = mio_reference_child_add(conn, parent, child, MIO_NO_REFERENCE_AT_CHILD, response);
+        }
+    } else if (comand ='r') { 
+    
+    } else if (command == 'q') 
+        err = mio_reference_child_add(conn, parent, child, MIO_NO_REFERENCE_AT_CHILD, response);
+
     mio_response_print(response);
     mio_response_free(response);
     mio_disconnect(conn);

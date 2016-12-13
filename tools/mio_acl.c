@@ -28,7 +28,7 @@
 #include <common.h>
 #include <stdlib.h>
 #include <signal.h>
-#include <mio.h>
+#include "mio.h"
 
 mio_response_t *response = NULL, *meta_response = NULL;
 mio_conn_t *conn;
@@ -272,7 +272,7 @@ int main(int argc, char **argv) {
                          response->stanza->xmpp_stanza->children, "affiliations");
             if (stanza != NULL ) {
                 affiliation = xmpp_stanza_get_children(stanza);
-                xmpp_stanza_to_text(stanza, (char**) &buf, (size_t*) &buflen);
+                xmpp_stanza_to_text(affiliation, (char**) &buf, (size_t*) &buflen);
                 fprintf(stdout, "%s\n", (char*) buf);
                 free(buf);
             } else {
